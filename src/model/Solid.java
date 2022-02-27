@@ -1,2 +1,4 @@
-package model;public class Solid {
+package model;
+
+public class Solid {
 }

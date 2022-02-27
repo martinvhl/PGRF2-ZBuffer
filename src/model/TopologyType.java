@@ -1,2 +1,6 @@
-package model;public enum TopologyType {
+package model;
+
+public enum TopologyType {
+    LINE,TRIANGLE;
+    //LINELOOP, TRIANGLESTRIP, TRIANGLEFAN..... - další možnosti pro flagy
 }
