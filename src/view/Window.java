@@ -4,7 +4,6 @@ import rasterize.ImageBuffer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class Window extends JFrame {
     private Dimension d = new Dimension(1280,720);
