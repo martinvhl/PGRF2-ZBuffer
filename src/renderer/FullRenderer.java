@@ -14,8 +14,11 @@ public class FullRenderer implements GPURenderer {
     private Mat4 view = new Mat4Identity();
     private Mat4 projection = new Mat4Identity();
 
-
-    //TODO constructor
+    public FullRenderer(Mat4 model, Mat4 view, Mat4 projection) {
+        this.model = model;
+        this.view = view;
+        this.projection = projection;
+    }
 
     @Override
     public void draw(List<Part> partsBuffer, List<Integer> indexBuffer, List<Vertex> vertexBuffer) {
@@ -48,13 +51,13 @@ public class FullRenderer implements GPURenderer {
         //2. ořezání
         //nejprve přísný fastclip - optimalizační krok, odstraníme to co by stejně nebylo vidět (kvůli výpočetně náročným operacím co následují - interpolace a pod.)
         //toto je první krok pro zakomentování v případě problému s vykreslováním, mělo by to fungovat i bez toho, jen pomaleji
-        if((a.getX() > a.getW() && b.getX() > b.getW() && c.getX()>c.getW()) ||
-            a.getY() > a.getW() && b.getY() > b.getW() && c.getY() > c.getW() ||
-            a.getX() < -a.getW() && b.getX() < -b.getW() && b.getX() < -b.getW() ||
-            a.getY() < -a.getW() && b.getY() < -b.getW() && c.getY() < -c.getW() ||
-                //TODO pro Z, pozor, jen <0;w>
-            )
-            return;
+        if((a.getX() > a.getW() && b.getX() > b.getW() && c.getX() > c.getW()) ||
+           (a.getY() > a.getW() && b.getY() > b.getW() && c.getY() > c.getW()) ||
+           (a.getZ() > 0 && b.getZ() > 0 && c.getZ() > 0) ||
+           (a.getX() < -a.getW() && b.getX() < -b.getW() && b.getX() < -b.getW()) ||
+           (a.getY() < -a.getW() && b.getY() < -b.getW() && c.getY() < -c.getW()) ||
+           (a.getZ() < -a.getW() && b.getZ() < -b.getW() && c.getZ() < -c.getW()))
+                return;
         //seřadíme podle z-souřadnice, abychom mohli provést interpolaci hodnot - max. 3x prohodíme, ještě jde o malý počet a můžeme to dělat ručně a ne přes metody Javy - sort, Comparator
         if (a.getZ() < b.getZ()) {
             //var temp = a; zápis od Javy 11, typ si to zpětně domyslí samo, jako v JS !!!

@@ -45,11 +45,11 @@ public class DepthBuffer implements Raster<Double>{
 
     @Override
     public int getWidth() {
-        return 0;
+        return width;
     }
 
     @Override
     public int getHeight() {
-        return 0;
+        return height;
     }
 }

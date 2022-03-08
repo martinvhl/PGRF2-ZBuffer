@@ -36,7 +36,7 @@ public class ImageBuffer implements Raster<Col> {
 
     @Override
     public void setElement(int x, int y, Col value) {
-
+        
     }
 
     @Override
@@ -48,16 +48,16 @@ public class ImageBuffer implements Raster<Col> {
 
     @Override
     public void setClearValue(Col value) {
-
+        clearColor = value;
     }
 
     @Override
     public int getWidth() {
-        return 0; //TODO - udělat metody getWidth, aby nebylo třeba přes img - prostě img.getWidth() sem
+        return img.getWidth();
     }
 
     @Override
     public int getHeight() {
-        return 0;
+        return img.getHeight();
     }
 }

@@ -6,18 +6,21 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Window extends JFrame {
-    private Dimension d = new Dimension(1280,720);
-    private Panel panel;
-    private ImageBuffer raster;
+    private final Panel panel;
+    Dimension d = new Dimension(1280,720);
+    private ImageBuffer raster = new ImageBuffer(d.width,d.height); //!tady vytváříme raster pro celou appku a předáváme ji do panelu
 
-    Window() {
+    public Window() {
+        setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-
         setResizable(false);
-        setLocationRelativeTo(null);
+        setTitle("PGRF 2: Z-Buffer | Martin Vahala");
 
         panel = new Panel(raster);
         add(panel,BorderLayout.CENTER);
+
+        pack();
+        setLocationRelativeTo(null);
+        panel.grabFocus();
     }
 }
