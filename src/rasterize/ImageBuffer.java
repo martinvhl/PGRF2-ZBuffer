@@ -29,6 +29,7 @@ public class ImageBuffer implements Raster<Col> {
         g.drawImage(img,0,0,null );//buffered image dědí z image - můžeme použít, začínáme v [0,0] a imageObserver null
     }
 
+    //todo takhle to vrací empty
     @Override
     public Optional<Col> getElement(int x, int y) {
         return Optional.empty();
@@ -36,7 +37,7 @@ public class ImageBuffer implements Raster<Col> {
 
     @Override
     public void setElement(int x, int y, Col value) {
-        
+        img.setRGB(x,y,value.getRGB());
     }
 
     @Override

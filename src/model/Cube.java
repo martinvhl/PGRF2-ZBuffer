@@ -27,10 +27,27 @@ public class Cube extends Solid {
         vertexBuffer.add(new Vertex(new Point3D(edge,0,0),barva)); //3
         vertexBuffer.add(new Vertex(new Point3D(0,0,edge),barva)); //4
         vertexBuffer.add(new Vertex(new Point3D(0,edge,edge),barva)); //5
-        vertexBuffer.add(new Vertex(new Point3D(edge,0,edge),barva)); //6
-        vertexBuffer.add(new Vertex(new Point3D(edge,edge,edge),barva)); //7
+        vertexBuffer.add(new Vertex(new Point3D(edge,edge,edge),barva)); //6
+        vertexBuffer.add(new Vertex(new Point3D(edge,0,edge),barva)); //7
 
-        //TODO indices - triangles
+        // indices - triangles
+        indexBuffer.add(0); indexBuffer.add(1); indexBuffer.add(2);
+        indexBuffer.add(0); indexBuffer.add(2); indexBuffer.add(3);
+
+        indexBuffer.add(0); indexBuffer.add(1); indexBuffer.add(5);
+        indexBuffer.add(0); indexBuffer.add(5); indexBuffer.add(4);
+
+        indexBuffer.add(1); indexBuffer.add(5); indexBuffer.add(6);
+        indexBuffer.add(1); indexBuffer.add(6); indexBuffer.add(2);
+
+        indexBuffer.add(0); indexBuffer.add(4); indexBuffer.add(7);
+        indexBuffer.add(0); indexBuffer.add(7); indexBuffer.add(3);
+
+        indexBuffer.add(4); indexBuffer.add(5); indexBuffer.add(6);
+        indexBuffer.add(4); indexBuffer.add(6); indexBuffer.add(7);
+
+        indexBuffer.add(3); indexBuffer.add(2); indexBuffer.add(6);
+        indexBuffer.add(3); indexBuffer.add(6); indexBuffer.add(7);
 
         //TODO indices - lines
 

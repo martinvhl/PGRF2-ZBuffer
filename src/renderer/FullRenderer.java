@@ -26,6 +26,7 @@ public class FullRenderer implements GPURenderer {
             TopologyType type = part.getTyp(); //topology type
             int start = part.getStart();
             int count = part.getCount();
+            //if (wireframe == false) trojuhelniky vykreslit, lines continue - !A NEBO NE A JEN ZAMEZIT SCAN-LINU U RASTERIZACE!!!
             if (type == TopologyType.TRIANGLE) {
                 for (int i = start; i < start + count*3; i+=3) {
                     int index1 = indexBuffer.get(i);
@@ -37,7 +38,8 @@ public class FullRenderer implements GPURenderer {
                     prepareTriangle(vertex1,vertex2,vertex3);
                 }
             } else if (type == TopologyType.LINE) {
-                //todo HW
+                //todo HW - totéž jako u trojuhelníků, navíc přidat možnost přepínání
+                //if (wireframe == true) triangle continue, počítat lines => vznikne wireframe
             }
         }
     }
