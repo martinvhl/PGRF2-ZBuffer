@@ -1,18 +1,30 @@
 package model;
 
-import renderer.GPURenderer;
-import transforms.Camera;
-import transforms.Mat4;
-import transforms.Mat4Identity;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Scene {
-    private final List<Solid> solids = new ArrayList<>(3);
-    private Mat4 modelMatrix = new Mat4Identity();
-    private Mat4 viewMatrix = new Mat4Identity();
-    private Mat4 projectionMatrix = new Mat4Identity();
-    private Camera cam;
-    private GPURenderer renderer;
+    private final List<Solid> solids;
+
+    public Scene() {
+        solids = new ArrayList<>(4);
+        initializeSolids();
+    }
+
+    private void initializeSolids() {
+        Cube cube = new Cube();
+        Pyramid pyramid = new Pyramid();
+        Axis axis = new Axis();
+        //BezierSurface surface = new BezierSurface();
+
+        solids.add(cube);
+        solids.add(pyramid);
+        solids.add(axis);
+        //solids.add(surface);
+    }
+
+
+    public List<Solid> getSolids() {
+        return solids;
+    }
 }

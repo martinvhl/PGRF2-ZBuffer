@@ -6,18 +6,24 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Panel extends JPanel {
-    private final ImageBuffer raster;
-    private static final int WIDTH=1280, HEIGHT = 720;
-
+    private ImageBuffer raster;
 
     public Panel(ImageBuffer raster) {
         this.raster = raster;
-        this.setPreferredSize(new Dimension(WIDTH,HEIGHT));
+        this.setPreferredSize(new Dimension(raster.getWidth(),raster.getHeight()));
     }
 
     @Override
     public void paintComponent(Graphics g) { //g - odkaz do bufferredimage
         super.paintComponent(g);
         raster.repaint(g);
+    }
+
+    public ImageBuffer getImageBuffer() {
+        return raster;
+    }
+
+    public void setImageBuffer(ImageBuffer imageBuffer) {
+        this.raster = imageBuffer;
     }
 }

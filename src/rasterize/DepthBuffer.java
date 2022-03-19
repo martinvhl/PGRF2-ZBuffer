@@ -18,12 +18,12 @@ public class DepthBuffer implements Raster<Double>{
 
     @Override
     public Optional<Double> getElement(int x, int y) {
-        return Optional.empty();
+        return Optional.of(zBuffer[x][y]);
     }
 
     @Override
     public void setElement(int x, int y, Double value) {
-
+        zBuffer[x][y] = value;
     }
 
     @Override

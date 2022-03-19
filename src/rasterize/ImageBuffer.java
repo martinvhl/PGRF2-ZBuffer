@@ -7,8 +7,8 @@ import java.awt.image.BufferedImage;
 import java.util.Optional;
 
 public class ImageBuffer implements Raster<Col> {
-    private final BufferedImage img;
-    private Col clearColor;
+    private BufferedImage img;
+    private Col clearColor = new Col(Color.BLACK.getRGB());
 
     public BufferedImage getImg() {
         return img;
@@ -29,20 +29,19 @@ public class ImageBuffer implements Raster<Col> {
         g.drawImage(img,0,0,null );//buffered image dědí z image - můžeme použít, začínáme v [0,0] a imageObserver null
     }
 
-    //todo takhle to vrací empty
     @Override
     public Optional<Col> getElement(int x, int y) {
-        return Optional.empty();
+        return Optional.of(new Col(img.getRGB(x,y)));
     }
 
     @Override
     public void setElement(int x, int y, Col value) {
-        img.setRGB(x,y,value.getRGB());
+        getImg().setRGB(x,y,value.getRGB());
     }
 
     @Override
     public void clear() {
-        Graphics g = img.getGraphics();
+        Graphics g = getImg().getGraphics();
         g.setColor(new Color(clearColor.getRGB()));
         g.fillRect(0,0,img.getWidth(), img.getHeight());
     }

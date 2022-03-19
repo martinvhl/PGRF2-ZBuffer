@@ -48,4 +48,12 @@ public class Vertex {
     public double getW() {
         return point.getW();
     }
+
+    @Override
+    public String toString() {
+        return "Vertex{" +
+                "point=" + point +
+                ", color=" + color +
+                '}';
+    }
 }
