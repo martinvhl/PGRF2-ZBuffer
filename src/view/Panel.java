@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Panel extends JPanel {
-    private ImageBuffer raster;
+    private final ImageBuffer raster;
 
     public Panel(ImageBuffer raster) {
         this.raster = raster;
@@ -14,16 +14,12 @@ public class Panel extends JPanel {
     }
 
     @Override
-    public void paintComponent(Graphics g) { //g - odkaz do bufferredimage
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
         raster.repaint(g);
     }
 
     public ImageBuffer getImageBuffer() {
         return raster;
-    }
-
-    public void setImageBuffer(ImageBuffer imageBuffer) {
-        this.raster = imageBuffer;
     }
 }

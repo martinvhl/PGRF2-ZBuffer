@@ -15,12 +15,12 @@ public class Scene {
         Cube cube = new Cube();
         Pyramid pyramid = new Pyramid();
         Axis axis = new Axis();
-        //BezierSurface surface = new BezierSurface();
+        BezierSurface surface = new BezierSurface();
 
         solids.add(cube);
         solids.add(pyramid);
         solids.add(axis);
-        //solids.add(surface);
+        solids.add(surface);
     }
 
 

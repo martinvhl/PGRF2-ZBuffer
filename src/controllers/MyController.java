@@ -18,7 +18,7 @@ public class MyController {
 
     private Camera cam;
     private int w,h,oldX,oldY,xMove,yMove,zMove, camMoveX, camMoveY;
-    private Mat4 translation, rotation, scaleChange, perspective, orthogonal, projection;
+    private Mat4 perspective, orthogonal, projection;
     private double xRot, yRot, zRot, enlarge, shrink;
 
     public MyController(Window window, Panel panel) {
@@ -147,9 +147,6 @@ public class MyController {
         shrink = 0.9;
         scene = new Scene();
         scene.getSolids().add(new Axis());
-        translation = new Mat4Identity();
-        rotation = new Mat4Identity();
-        scaleChange = new Mat4Identity();
         perspective = new Mat4PerspRH(Math.PI/2,(double)h/w,0.1,50);
         orthogonal = new Mat4OrthoRH(50,50,0.1,50);
         projection = perspective;

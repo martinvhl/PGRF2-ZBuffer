@@ -3,8 +3,6 @@ package renderer;
 import model.Part;
 import model.Solid;
 import model.Vertex;
-import shader.Shader;
-import transforms.Col;
 import transforms.Mat4;
 
 import java.util.List;

@@ -28,14 +28,9 @@ public class DepthBuffer implements Raster<Double>{
 
     @Override
     public void clear() {
-        for (double[] zArray : zBuffer) { //pole naplníme hodnotami 1.0
+        for (double[] zArray : zBuffer) {
             Arrays.fill(zArray, clearValue);
         }
-        /*
-        for (int i = 0; i < zArray.length; i++) { //tento cyklus je vlastně totéž co ve funkci Arrays.fill()
-                zArray[i] = clearValue;
-            }
-         */
     }
 
     @Override

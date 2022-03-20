@@ -7,8 +7,6 @@ import model.Vertex;
 import rasterize.DepthBuffer;
 import rasterize.ImageBuffer;
 import transforms.*;
-
-import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +26,11 @@ public class FullRenderer implements GPURenderer {
         this.imageBuffer = imageBuffer;
         depthBuffer = new DepthBuffer(imageBuffer.getWidth(),imageBuffer.getHeight());
     }
+
+    /**
+     * Metoda prochází tělesa scény a postupně je vykresluje
+     * @param solids Seznam těles získaný ze scény
+     */
     public void render(List<Solid> solids) {
         for (Solid s:solids) {
             model = s.getModelMatrix();
@@ -35,10 +38,17 @@ public class FullRenderer implements GPURenderer {
         }
     }
 
+    /**
+     * Metodě předáme z tělesa scény potřebné parametry a ta je dále zpracovává podle zobrazovacího řetězce
+     * @param partsBuffer PartBuffer předaný právě vykreslovaným tělesem
+     * @param indexBuffer IndexBuffer předaný právě vykreslovaným tělesem
+     * @param vertexBuffer VertexBuffer předaný právě vykreslovaným tělesem
+     * @param onlyWireframe Uživatelem zvolené nastavení pro vykreslení pouhého drátového modelu
+     */
     @Override
     public void draw(List<Part> partsBuffer, List<Integer> indexBuffer, List<Vertex> vertexBuffer, boolean onlyWireframe) {
         for (Part part : partsBuffer) {
-            TopologyType type = part.getTyp(); //topology type
+            TopologyType type = part.getTyp();
             int start = part.getStart();
             int count = part.getCount();
 
@@ -154,10 +164,10 @@ public class FullRenderer implements GPURenderer {
     }
 
     /**
-     *
-     * @param vertex1
-     * @param vertex2
-     * @param vertex3
+     * Tato metoda implementuje část zobrazovacího řetězce
+     * @param vertex1 Z metody draw() předaný vertex ke zpracování
+     * @param vertex2 Z metody draw() předaný vertex ke zpracování
+     * @param vertex3 Z metody draw() předaný vertex ke zpracování
      */
     private void prepareTriangle(Vertex vertex1, Vertex vertex2, Vertex vertex3) {
         //1. transformace vrcholů
@@ -166,8 +176,6 @@ public class FullRenderer implements GPURenderer {
         Vertex c = new Vertex(vertex3.getPoint().mul(model).mul(view).mul(projection),vertex3.getColor());
 
         //2. ořezání
-        //nejprve přísný fastclip - optimalizační krok, odstraníme to co by stejně nebylo vidět (kvůli výpočetně náročným operacím co následují - interpolace a pod.)
-        //toto je první krok pro zakomentování v případě problému s vykreslováním, mělo by to fungovat i bez toho, jen pomaleji
         if (a.getX() > a.getW() && b.getX() > b.getW() && c.getX() > c.getW()) return;
         if (a.getY() > a.getW() && b.getY() > b.getW() && c.getY() > c.getW()) return;
         if (a.getZ() < 0 && b.getZ() < 0 && c.getZ() < 0) return;
@@ -175,12 +183,11 @@ public class FullRenderer implements GPURenderer {
         if (a.getY() < -a.getW() && b.getY() < -b.getW() && c.getY() < -c.getW()) return;
         if (a.getZ() < -a.getW() && b.getZ() < -b.getW() && c.getZ() < -c.getW()) return;
 
-        //seřadíme podle z-souřadnice, abychom mohli provést interpolaci hodnot - max. 3x prohodíme, ještě jde o malý počet a můžeme to dělat ručně a ne přes metody Javy - sort, Comparator
+        //seřadíme podle z-souřadnice, abychom mohli provést interpolaci hodnot
         if (a.getZ() < b.getZ()) {
-            //var temp = a; zápis od Javy 11, typ si to zpětně domyslí samo, jako v JS !!!
             Vertex temp = a;
             a=b;
-            b=temp; // prohodili jsme reference
+            b=temp;
         }
         if (a.getZ() < c.getZ()) {
             var temp = a;
@@ -192,18 +199,7 @@ public class FullRenderer implements GPURenderer {
             c=b;
             b=temp;
         }
-        /*
-            alternativa pro více než 3 - vytvoříme List<Vertex>
-            pozor - Collections.sort() mění původní kolekci (return void)
-            List<Vertex> sortedVertices = Stream.of(a,b,c).sorted(new Comparator.comparingDouble(Vertex::getZ).toList()
-            })
-         */
-        /*
-        chceme spočítat vrcholy, kdy strany trojúhelníka protínají z= 0 - lineární interpolace s z = 0 (slide "Ořezání trojúhelníku před dehomogenizací")
-        t=(0-v1.z)/(v2.z-v1.z)
-        va = v1*(1-t) + v2*t -> va = v1.mul(1-t).add(v2.mul(t))
-        stejným způsobem se dopočítá x, y, barva, souřadnice do textury apod.
-         */
+
         if (a.getZ() < 0) {
             return;
         } else if (b.getZ() < 0) {
@@ -222,7 +218,7 @@ public class FullRenderer implements GPURenderer {
             double t13 = (0-a.getZ())/(c.getZ() - a.getZ());
             Vertex vAC = a.mul(1-t13).add(c.mul(t13));
 
-            drawTriangle(a,b,vBC); // rozdělení viz přednáška slide č.103 - Triangulace
+            drawTriangle(a,b,vBC);
             drawTriangle(a,vBC,vAC);
 
         } else {
@@ -230,8 +226,13 @@ public class FullRenderer implements GPURenderer {
         }
     }
 
+    /**
+     * Metoda získá vertexy z metody prepareTriangle() a pokračuje ve zpracovávání
+     * @param a Vertex získaný z prepareTriangle()
+     * @param b Vertex získaný z prepareTriangle()
+     * @param c Vertex získaný z prepareTriangle()
+     */
     private void drawTriangle(Vertex a, Vertex b, Vertex c) {
-        //zde rozdělujeme souřadnice od barev vertexu, nutno pak vrátit
         Optional<Vec3D> o1 = a.getPoint().dehomog();
         if (o1.isEmpty()) return;
 
@@ -265,8 +266,6 @@ public class FullRenderer implements GPURenderer {
         Vertex newV2 = new Vertex(new Point3D(o2.get()),b.getColor());
         Vertex newV3 = new Vertex(new Point3D(o3.get()),c.getColor());
 
-        //nyní je nutno setřídit podle y!
-        //V1y <= v2y <= v3y -> jako jsme dělali pro z
         if (newV1.getY() > newV2.getY()) {
             Vertex temp = newV1;
             newV1 = newV2;
@@ -277,7 +276,7 @@ public class FullRenderer implements GPURenderer {
             newV2 = newV3;
             newV3 = temp;
         }
-        if (newV1.getY() > newV2.getY()) { //v newV1 nejmenší y
+        if (newV1.getY() > newV2.getY()) {
             Vertex temp = newV1;
             newV1 = newV2;
             newV2 = temp;
@@ -308,8 +307,13 @@ public class FullRenderer implements GPURenderer {
         }
     }
 
+    /**
+     * Metoda implementuje část algoritmu scan-line pro vyplňování trojúhelníků
+     * @param y Parametr y určuje kde se zrovna nacházíme
+     * @param a První vertex k interpolaci
+     * @param b Druhý vertex k interpolaci
+     */
     private void fillLine(long y, Vertex a, Vertex b) {
-        //nejprve přehodit hodnoty x - "menší vlevo", dále část úsečky může být mimo obraz atd.
         if (a.getX() > b.getX()) {
             Vertex temp = a;
             a = b;
@@ -325,6 +329,13 @@ public class FullRenderer implements GPURenderer {
         }
     }
 
+    /**
+     * Metoda pro samotné vykreslení a kontrolu viditelnosti
+     * @param x Parametr x z vertexu
+     * @param y Parametr y z vertexu
+     * @param z Parametr z z vertexu
+     * @param color Parametr barvy z vertexu
+     */
     private void drawPixel(int x, int y, double z, Col color) {
         Optional<Double> depthBufferElement = depthBuffer.getElement(x, y);
         if (depthBufferElement.isEmpty()) return;

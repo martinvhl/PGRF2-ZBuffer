@@ -6,9 +6,6 @@ import java.awt.*;
 
 public class Window extends JFrame {
     private final Panel panel;
-    private JPanel controlPanel;
-    private Dimension d;
-    private ImageBuffer raster; //!tady vytváříme raster pro celou appku a předáváme ji do panelu
     private JCheckBox cubeBox;
     private JCheckBox pyramidBox;
     private JCheckBox bezierSurfaceBox;
@@ -35,8 +32,8 @@ public class Window extends JFrame {
         setResizable(false);
         setTitle("PGRF 2: Z-Buffer | Martin Vahala");
 
-        d = new Dimension(1280,720);
-        raster  = new ImageBuffer(d.width,d.height);
+        Dimension d = new Dimension(1280, 720);
+        ImageBuffer raster = new ImageBuffer(d.width, d.height); //!tady vytváříme raster pro celou appku a předáváme ji do panelu
 
         panel = new Panel(raster);
         add(panel,BorderLayout.CENTER);
@@ -58,7 +55,10 @@ public class Window extends JFrame {
 
         JMenuItem fileHelp = new JMenuItem("Help");
         fileHelp.addActionListener((e) -> {
-            String napoveda = "ZDE BUDE TEXT OVLÁDÁNÍ!";
+            String napoveda = "\n\tNejprve si z checkboxu v levém horním rohu vyberte těleso k ovládání.\n\tVybrané těleso můžete ovládat příslušnými tlačítky.\n\t" +
+                    "Bez vybraného tělesa tlačítka programu nefungují!\n\n\tScénu můžete procházet pomocí kláves \"WSAD\", rozhlížíte se tažením myší (držte levém tlačítko myši).\n\t" +
+                    "Projekci na ORTOGONÁLNÍ změníte klávesou \"O\", zpět na PERSPEKTIVNÍ se vrátíte klávesou \"P\"\n\n\t" +
+                    "Pro přepnutí do čistě drátového režimu a zpět použijte Mezerník.\n";
             JFrame frame = new JFrame("OVLÁDÁNÍ");
             frame.setFocusable(false);
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -100,7 +100,7 @@ public class Window extends JFrame {
     }
 
     private void createControlPanel() {
-        controlPanel = new JPanel();
+        JPanel controlPanel = new JPanel();
         controlPanel.setLayout(new BoxLayout(controlPanel,BoxLayout.Y_AXIS));
         add(controlPanel,BorderLayout.WEST);
 
@@ -175,26 +175,6 @@ public class Window extends JFrame {
         return panel;
     }
 
-    public Dimension getD() {
-        return d;
-    }
-
-    public void setD(Dimension d) {
-        this.d = d;
-    }
-
-    public ImageBuffer getRaster() {
-        return raster;
-    }
-
-    public void setRaster(ImageBuffer raster) {
-        this.raster = raster;
-    }
-
-    public JPanel getControlPanel() {
-        return controlPanel;
-    }
-
     public JCheckBox getCubeBox() {
         return cubeBox;
     }
@@ -205,10 +185,6 @@ public class Window extends JFrame {
 
     public JCheckBox getBezierSurfaceBox() {
         return bezierSurfaceBox;
-    }
-
-    public Dimension getButtonDimension() {
-        return buttonDimension;
     }
 
     public JButton getxTranslationPlus() {

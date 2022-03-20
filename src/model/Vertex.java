@@ -7,10 +7,6 @@ public class Vertex {
     private final Point3D point;
     private final Col color;
 
-     // + navíc třeba normála - osvětlení, textury - private final Vec3D normala
-    // navíc je možná tzv. souřadnice do textury - namapování obrázku na plochu - př. čtvercový obrázek na čtvercovou plochu - private final Vec2D textureCoord
-
-
     public Vertex(Point3D point, Col color) {
         this.point = point;
         this.color = color;
@@ -24,7 +20,7 @@ public class Vertex {
         return color;
     }
 
-    public Vertex add(Vertex otherVertex) { //sčítání např. pro interpolaci
+    public Vertex add(Vertex otherVertex) {
         return new Vertex(
                 point.add(otherVertex.getPoint()),
                 color.add(otherVertex.getColor())
@@ -34,8 +30,6 @@ public class Vertex {
         return new Vertex(point.mul(t),color.mul(t));
     }
 
-
-    //gettery pro zkrácení kódu constructoru
     public double getX() {
         return point.getX();
     }
